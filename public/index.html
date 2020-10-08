@@ -1,12 +1,62 @@
-<!doctype html> 
-<html lang="en"> 
-<head> 
+<!doctype html>
+<html lang="en">
+
+<head>
     <meta charset="UTF-8" />
     <title>Planning Poker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
     <script src="scripts/engine.js"></script>
+    <link rel="stylesheet" href="styles/poker.css">
 </head>
+
 <body>
-<h1> Hello World </h1>
+    <h1> Poker Planning </h1>
+
+    <div class="PokerControls">
+        <div class="StoryTitle">
+            <input type="text" id="storyTitle" name="storyTitle" value="As a User, I would like X, so that Y">
+        </div>
+
+        <div class="ScoreButtons">
+            <button type="button">1</button>
+            <button type="button">2</button>
+            <button type="button">3</button>
+            <button type="button">5</button>
+            <button type="button">8</button>
+            <button type="button">13</button>
+            <button type="button">21</button>
+            <button type="button">34</button>
+        </div>
+
+        <div class="ControlButtons">
+            <div>
+                <button type="button" class="ShowResults">Show Score</button>
+            </div>
+            <div> <button type="button" class="ClearScores">Clear Votes</button>
+            </div>
+
+        </div>
+
+        <div class="ResultsPanel">
+            <div class="Score">
+                <div>Team Consensus</div>
+                <div id="scorePanel">21</div>
+            </div>
+        </div>
+        <div class="UsersPanel">
+            <div>Connected Users</div>
+        </div>
+
+        <div class="Social-Buttons">
+            <div>
+              <a href="https://github.com/rayhogan/planningpoker">
+                <img src="assets/github.svg"/>
+              </a>
+            </div>
+          </div>
+
+    </div>
 </body>
+
 </html>

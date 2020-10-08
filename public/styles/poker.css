@@ -1,3 +1,119 @@
 body {
-    margin: 0;
+    background-color: #6fbeec;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: top;
+    font-size: calc(10px + 2vmin);
+    color: white;
+    font-family: 'Luckiest Guy', cursive;
+}
+
+.PokerControls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    color: #f1f199;
+}
+
+.StoryTitle input {
+    width: 600px;
+    height: 30px;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 20px;
+    background-color: #6fbeec;
+    color: white;
+    border: 0px solid gray;
+    font-weight: 700;
+}
+
+.StoryTitle input:focus {
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 0px;
+    font-weight: normal;
+}
+
+.ScoreButtons {
+    align-items: center;
+
+}
+
+.ScoreButtons button {
+    height: 40px;
+    width: 40px;
+    margin: 10px;
+    background-color: white;
+}
+
+.ControlButtons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.ControlButtons button {
+    height: 50px;
+    width: 100px;
+    margin: 10px;
+    border: 1px solid black;
+}
+
+.ShowResults {
+    background-color: #9ff59f;
+}
+
+.ClearScores {
+    background-color: #fb8c8c;
+}
+
+.Social-Buttons {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+}
+
+.Social-Buttons div {
+    padding: 5px;
+}
+
+.Social-Buttons div img {
+    height: 30px;
+}
+
+.ResultsPanel {
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+}
+
+.Score {
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.Score div {
+    margin-right: 10px;
+}
+
+.UsersPanel
+{
+    font-size: 20px;
+    border-radius: 10px;
+    border: 1px solid black;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    min-height: 200px;
 }
