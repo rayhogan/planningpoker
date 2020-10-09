@@ -10,8 +10,8 @@ app.get('/', function (req, res) {
 });
 
 
-// Store all players
-var players = {};
+// Store all user
+var connections = {};
 
 // Socket.io
 var io = require('socket.io')(server, {
@@ -22,18 +22,29 @@ var io = require('socket.io')(server, {
 io.on('connection', function (socket) {
     console.log('a user connected');
 
-    // create a new player and add it to our players object
-    players[socket.id] = {
-        playerId: socket.id
+    // create a new user and add it to our connections object
+    connections[socket.id] = {
+        name: "User",
+        userId: socket.id
     };
 
+    // update all other users of the new user
+    socket.broadcast.emit('newUser', connections[socket.id]);
+
+    // send the users object to the new user
+    socket.emit('currentUsers', connections);
+
     socket.on('disconnect', function () {
+
         console.log('user disconnected');
-        // remove this player from our players object
-        delete players[socket.id];
+        // remove this user from our connections object
+        delete connections[socket.id];
+
+        // emit a message to all users to remove this user
+        io.emit('disconnect', socket.id);
 
     });
-   
+
 });
 
 var port = process.env.PORT || 1337;
