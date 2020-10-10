@@ -6,7 +6,6 @@
     <title>Planning Poker</title>
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
-    <script src="scripts/engine.js"></script>
     <link rel="stylesheet" href="styles/poker.css">
 </head>
 
@@ -15,7 +14,9 @@
 
     <div class="PokerControls">
         <div class="StoryTitle">
-            <input type="text" id="storyTitle" name="storyTitle" value="As a User, I would like X, so that Y">
+            <div id="storyDisplay">As a User, I would like X, so that Y</div>
+            <textarea style="display: none;" id="storyTitle" name="storyTitle" rows="4" cols="50" 
+                onblur="editFinished()">As a User, I would like X, so that Y</textarea>
         </div>
 
         <div class="ScoreButtons">
@@ -47,19 +48,19 @@
         <div class="UsersPanel">
             <div>Connected Users</div>
             <div id="UserList">
-
             </div>
         </div>
 
         <div class="Social-Buttons">
             <div>
-              <a href="https://github.com/rayhogan/planningpoker">
-                <img src="assets/github.svg"/>
-              </a>
+                <a href="https://github.com/rayhogan/planningpoker">
+                    <img src="assets/github.svg" />
+                </a>
             </div>
-          </div>
+        </div>
 
     </div>
+    <script src="scripts/engine.js"></script>
 </body>
 
 </html>
