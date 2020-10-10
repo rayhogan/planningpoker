@@ -12,6 +12,7 @@ app.get('/', function (req, res) {
 
 // Store all user
 var connections = {};
+var storyName = "As a User, I would like X, so that Y";
 
 // Socket.io
 var io = require('socket.io')(server, {
@@ -34,6 +35,9 @@ io.on('connection', function (socket) {
     // send the users object to the new user
     socket.emit('currentUsers', connections);
 
+    // send connected user the current story
+    socket.emit('updateStory', storyName);
+
     socket.on('disconnect', function () {
 
         console.log('user disconnected');
@@ -43,6 +47,13 @@ io.on('connection', function (socket) {
         // emit a message to all users to remove this user
         io.emit('disconnect', socket.id);
 
+    });
+
+    // When a user updates the story details
+    socket.on('storyUpdatedByUser', function (storyText) {
+        // Emit a message to all users with the update story title.
+        storyName = storyText;
+        socket.broadcast.emit('updateStory', storyName);
     });
 
 });
