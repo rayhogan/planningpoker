@@ -115,8 +115,7 @@ h1 {
     margin-right: 10px;
 }
 
-.UsersPanel
-{
+.UsersPanel {
     font-size: 20px;
     border-radius: 10px;
     border: 1px solid black;
@@ -127,11 +126,31 @@ h1 {
     min-height: 200px;
 }
 
-#UserList
-{
+#UserList {
     font-size: 15px;
 }
-#UserList div
-{
+
+#UserList div {
     margin-top: 10px;
+}
+
+.UsernamePanel input {
+    height: 25px;
+}
+
+.UsernamePanel button {
+    height: 40px;
+    width: 100px;
+    margin: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+button:hover{
+cursor: pointer;
+}
+
+button:focus
+{
+    outline:none;
 }
