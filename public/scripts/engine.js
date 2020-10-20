@@ -27,7 +27,7 @@ this.socket.on('disconnect', function (userId) {
 function RenderUsers() {
     var userMarkup = '';
     Object.keys(connectedUsers).forEach(function (id) {
-        userMarkup += '<div> User ' + connectedUsers[id].userId + ' </div>';
+        userMarkup += '<div>' + connectedUsers[id].name + ' </div>';
     });
 
     document.getElementById('UserList').innerHTML = userMarkup;
@@ -55,3 +55,12 @@ document.getElementById('storyDisplay')
         document.getElementById('storyTitle').style.display = "block";
         document.getElementById('storyTitle').focus();
     });
+
+
+function UpdateName()
+{
+    console.log(document.getElementById('username').value);
+    // Push update back to server
+    this.socket.emit('nameUpdatedByUser', document.getElementById('username').value);
+    
+}

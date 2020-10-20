@@ -55,6 +55,13 @@ io.on('connection', function (socket) {
         storyName = storyText;
         socket.broadcast.emit('updateStory', storyName);
     });
+    
+    // When a user updates their display name
+    socket.on('nameUpdatedByUser', function (username) {
+        connections[socket.id].name = username;
+        // Emit name change to users
+        io.emit('currentUsers', connections);
+    });
 
 });
 

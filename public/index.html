@@ -15,7 +15,7 @@
     <div class="PokerControls">
         <div class="StoryTitle">
             <div id="storyDisplay">As a User, I would like X, so that Y</div>
-            <textarea style="display: none;" id="storyTitle" name="storyTitle" rows="4" cols="50" 
+            <textarea style="display: none;" id="storyTitle" name="storyTitle" rows="4" cols="50"
                 onblur="editFinished()">As a User, I would like X, so that Y</textarea>
         </div>
 
@@ -50,7 +50,11 @@
             <div id="UserList">
             </div>
         </div>
+        <div>
+            <input type="text" id="username" name="username" value="User">
+            <button type="button" class="ChangeName" onclick="UpdateName()">Change Name</button>
 
+        </div>
         <div class="Social-Buttons">
             <div>
                 <a href="https://github.com/rayhogan/planningpoker">
