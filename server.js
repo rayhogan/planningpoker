@@ -26,7 +26,8 @@ io.on('connection', function (socket) {
     // create a new user and add it to our connections object
     connections[socket.id] = {
         name: "User",
-        userId: socket.id
+        userId: socket.id,
+        score: 0
     };
 
     // update all other users of the new user
@@ -60,6 +61,13 @@ io.on('connection', function (socket) {
     socket.on('nameUpdatedByUser', function (username) {
         connections[socket.id].name = username;
         // Emit name change to users
+        io.emit('currentUsers', connections);
+    });
+
+    // When a user casts a vote
+    socket.on('submitScore', function (score) {
+        connections[socket.id].score = score;
+        // Emit score to all users
         io.emit('currentUsers', connections);
     });
 

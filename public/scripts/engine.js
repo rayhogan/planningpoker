@@ -27,7 +27,7 @@ this.socket.on('disconnect', function (userId) {
 function RenderUsers() {
     var userMarkup = '';
     Object.keys(connectedUsers).forEach(function (id) {
-        userMarkup += '<div>' + connectedUsers[id].name + ' </div>';
+        userMarkup += '<div>' + connectedUsers[id].name + ' ' + connectedUsers[id].score + ' </div > ';
     });
 
     document.getElementById('UserList').innerHTML = userMarkup;
@@ -57,10 +57,13 @@ document.getElementById('storyDisplay')
     });
 
 
-function UpdateName()
-{
+function UpdateName() {
     console.log(document.getElementById('username').value);
     // Push update back to server
     this.socket.emit('nameUpdatedByUser', document.getElementById('username').value);
-    
+
+}
+
+function SubmitScore(element) {
+    this.socket.emit('submitScore', element.getAttribute("value"));
 }
