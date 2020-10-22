@@ -1,7 +1,7 @@
 # Planning Poker App (In Development)
 
 ![Alt text](/public/assets/screenshot.png?raw=true "App Screenshot")
-Screenshot valid as of 20th Oct 2020
+Screenshot valid as of 22nd Oct 2020
 
 TODO: Add link to live demo here
 
