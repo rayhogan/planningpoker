@@ -71,6 +71,21 @@ io.on('connection', function (socket) {
         io.emit('currentUsers', connections);
     });
 
+    // When a user casts a vote
+    socket.on('getScore', function () {  
+        // calculate score      
+        var score = 0;        
+        Object.keys(connections).forEach(function (id) {
+            score += connections[id].score;
+        });
+        console.log(score);
+        console.log(connections.length);
+        score = score / Object.keys(connections).length;
+
+        // Emit score to all users
+        io.emit('showScore', score);
+    });
+
 });
 
 var port = process.env.PORT || 1337;
