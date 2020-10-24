@@ -38,6 +38,11 @@ this.socket.on('updateStory', function (storyInfo) {
     document.getElementById('storyDisplay').innerText = storyInfo;
 });
 
+// Show the team consensus
+this.socket.on('showScore', function (score) {
+    console.log("Score: "+score);
+    document.getElementById('scorePanel').innerText = score;
+});
 
 function editFinished() {
     document.getElementById('storyDisplay').innerText = document.getElementById('storyTitle').value;
@@ -65,5 +70,9 @@ function UpdateName() {
 }
 
 function SubmitScore(element) {
-    this.socket.emit('submitScore', element.getAttribute("value"));
+    this.socket.emit('submitScore', parseInt(element.getAttribute("value")));
+}
+
+function ShowScore() {
+    this.socket.emit('getScore');
 }
