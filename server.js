@@ -78,8 +78,6 @@ io.on('connection', function (socket) {
         Object.keys(connections).forEach(function (id) {
             score += connections[id].score;
         });
-        console.log(score);
-        console.log(connections.length);
         score = score / Object.keys(connections).length;
 
         // Emit score to all users
