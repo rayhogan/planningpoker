@@ -12,7 +12,8 @@ app.get('/', function (req, res) {
 
 // Store all user
 var connections = {};
-var storyName = "As a User, I would like X, so that Y";
+var stories = ["As a User, I would like X, so that Y", "As a User, I want Z"];
+var activeStory = stories[0];
 
 // Socket.io
 var io = require('socket.io')(server, {
@@ -36,8 +37,11 @@ io.on('connection', function (socket) {
     // send the users object to the new user
     socket.emit('currentUsers', connections);
 
+    // Send the list of stories to newly connected users.
+    socket.emit('storiesList', stories)
+
     // send connected user the current story
-    socket.emit('updateStory', storyName);
+    socket.emit('updateStory', activeStory);
 
     socket.on('disconnect', function () {
 
@@ -56,7 +60,16 @@ io.on('connection', function (socket) {
         storyName = storyText;
         socket.broadcast.emit('updateStory', storyName);
     });
-    
+
+    // When a user submits a new story
+    socket.on('newStoryByUser', function (newStoryTitle) {
+        console.log("New story created: " + newStoryTitle);
+        stories.push(newStoryTitle);
+
+        //Send to everyone to stay in sync. TODO: With private sessions can emit to all in room.
+        io.emit('storiesList', stories)
+    });
+
     // When a user updates their display name
     socket.on('nameUpdatedByUser', function (username) {
         connections[socket.id].name = username;
@@ -72,9 +85,9 @@ io.on('connection', function (socket) {
     });
 
     // When a user casts a vote
-    socket.on('getScore', function () {  
+    socket.on('getScore', function () {
         // calculate score      
-        var score = 0;        
+        var score = 0;
         Object.keys(connections).forEach(function (id) {
             score += connections[id].score;
         });
