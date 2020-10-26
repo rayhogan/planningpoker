@@ -3,13 +3,6 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 
-app.use(express.static(__dirname + '/public'));
-
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
-});
-
-
 // Store all user
 var connections = {};
 var storyName = "As a User, I would like X, so that Y";

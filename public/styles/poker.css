@@ -154,3 +154,9 @@ button:focus
 {
     outline:none;
 }
+
+#CreateSession
+{
+    display: flex;
+    flex-direction: column;
+}

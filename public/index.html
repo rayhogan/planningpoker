@@ -12,57 +12,65 @@
 <body>
     <h1> Planning Poker </h1>
 
-    <div class="PokerControls">
-        <div class="StoryTitle">
-            <div id="storyDisplay">As a User, I would like X, so that Y</div>
-            <textarea style="display: none;" id="storyTitle" name="storyTitle" rows="4" cols="50"
-                onblur="editFinished()">As a User, I would like X, so that Y</textarea>
-        </div>
-
-        <div class="ScoreButtons">
-            <button type="button" onclick="SubmitScore(this)" value="1">1</button>
-            <button type="button" onclick="SubmitScore(this)" value="2">2</button>
-            <button type="button" onclick="SubmitScore(this)" value="3">3</button>
-            <button type="button" onclick="SubmitScore(this)" value="5">5</button>
-            <button type="button" onclick="SubmitScore(this)" value="8">8</button>
-            <button type="button" onclick="SubmitScore(this)" value="13">13</button>
-            <button type="button" onclick="SubmitScore(this)" value="21">21</button>
-            <button type="button" onclick="SubmitScore(this)" value="34">34</button>
-        </div>
-
-        <div class="ControlButtons">
-            <div>
-                <button type="button" class="ShowResults" onclick="ShowScore();">Show Score</button>
-            </div>
-            <div> <button type="button" class="ClearScores">Clear Votes</button>
+    <div id="Poker" style="display:none;">
+        <div class="PokerControls">
+            <div class="StoryTitle">
+                <div id="storyDisplay">As a User, I would like X, so that Y</div>
+                <textarea style="display: none;" id="storyTitle" name="storyTitle" rows="4" cols="50"
+                    onblur="editFinished()">As a User, I would like X, so that Y</textarea>
             </div>
 
-        </div>
+            <div class="ScoreButtons">
+                <button type="button" onclick="SubmitScore(this)" value="1">1</button>
+                <button type="button" onclick="SubmitScore(this)" value="2">2</button>
+                <button type="button" onclick="SubmitScore(this)" value="3">3</button>
+                <button type="button" onclick="SubmitScore(this)" value="5">5</button>
+                <button type="button" onclick="SubmitScore(this)" value="8">8</button>
+                <button type="button" onclick="SubmitScore(this)" value="13">13</button>
+                <button type="button" onclick="SubmitScore(this)" value="21">21</button>
+                <button type="button" onclick="SubmitScore(this)" value="34">34</button>
+            </div>
 
-        <div class="ResultsPanel">
-            <div class="Score">
-                <div>Team Consensus</div>
-                <div id="scorePanel">0</div>
+            <div class="ControlButtons">
+                <div>
+                    <button type="button" class="ShowResults" onclick="ShowScore();">Show Score</button>
+                </div>
+                <div> <button type="button" class="ClearScores">Clear Votes</button>
+                </div>
+
+            </div>
+
+            <div class="ResultsPanel">
+                <div class="Score">
+                    <div>Team Consensus</div>
+                    <div id="scorePanel">0</div>
+                </div>
+            </div>
+            <div class="UsersPanel">
+                <div>Connected Users</div>
+                <div id="UserList">
+                </div>
+            </div>
+            <div class="UsernamePanel">
+                <input type="text" id="username" name="username" value="User">
+                <button type="button" class="ChangeName" onclick="UpdateName()">Change Name</button>
+
             </div>
         </div>
-        <div class="UsersPanel">
-            <div>Connected Users</div>
-            <div id="UserList">
-            </div>
-        </div>
-        <div class="UsernamePanel">
-            <input type="text" id="username" name="username" value="User">
-            <button type="button" class="ChangeName" onclick="UpdateName()">Change Name</button>
+    </div>
+    <div id="CreateSession">
 
-        </div>
-        <div class="Social-Buttons">
-            <div>
-                <a href="https://github.com/rayhogan/planningpoker">
-                    <img src="assets/github.svg" />
-                </a>
-            </div>
-        </div>
+        <label>User Name</label>
+        <input type="text" id="username" name="username" value="User123">
+        <button type="button" class="ChangeName" onclick="CreateSession()">Create Session</button>
 
+    </div>
+    <div class="Social-Buttons">
+        <div>
+            <a href="https://github.com/rayhogan/planningpoker">
+                <img src="assets/github.svg" />
+            </a>
+        </div>
     </div>
     <script src="scripts/engine.js"></script>
 </body>
