@@ -44,6 +44,19 @@ this.socket.on('showScore', function (score) {
     document.getElementById('scorePanel').innerText = score;
 });
 
+// Receive the list of stories in the session from the server and add them to our list.
+this.socket.on('storiesList', function(stories){
+    console.log("Received active stories from server: " + stories);
+    //Replace all items in the lit with what has come from the server.
+    //Host should be able to add, remove, reorder, which should be reflected in the client.
+    document.getElementById('pendingStories').innerHTML = ''
+    stories.forEach(function(story){
+        if(story !== undefined){
+            updateStoriesList(story);
+        }
+    });
+});
+
 function editFinished() {
     document.getElementById('storyDisplay').innerText = document.getElementById('storyTitle').value;
     document.getElementById('storyTitle').style.display = "none";
@@ -76,3 +89,28 @@ function SubmitScore(element) {
 function ShowScore() {
     this.socket.emit('getScore');
 }
+
+// Add a new story from the user input.
+function addStory(){
+    let newStory = document.getElementById("newStoryTitle")
+    let storyText = newStory.value;
+    this.socket.emit('newStoryByUser', storyText)
+    newStory.value = ''
+}
+
+// Update our stories list to include the given story.
+function updateStoriesList(newStory){
+    let newStoryDiv = document.createElement("div")
+    newStoryDiv.className = "Story"
+    newStoryDiv.innerText = newStory
+    
+    document.getElementById('pendingStories').appendChild(newStoryDiv)
+}
+
+//Allow a user to submit a new story by pressing 'Return'
+document.getElementById('newStoryTitle').addEventListener("keydown", function(e) {
+    if (!e) { var e = window.event; }
+    if (e.keyCode == 13) {e.preventDefault();
+         addStory(); 
+        }
+}, false);
