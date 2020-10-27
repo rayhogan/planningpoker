@@ -70,6 +70,17 @@ io.on('connection', function (socket) {
         io.emit('storiesList', stories)
     });
 
+    // When a user deletes a story
+    socket.on('deleteStoryByUser', function (story) {
+        console.log("Received request to remove " + story);
+    
+        let storyIndex = stories.indexOf(story)
+        if(storyIndex > -1){
+            stories.splice(storyIndex, 1);
+            io.emit('storiesList', stories)
+        }
+    });
+
     // When a user updates their display name
     socket.on('nameUpdatedByUser', function (username) {
         connections[socket.id].name = username;

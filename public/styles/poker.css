@@ -200,3 +200,11 @@ button:focus
 {
     outline:none;
 }
+
+.StoryDeleteButton {
+    padding: 2px;
+    margin-right: 5px;
+    border: 1px solid white; 
+    background-color: red;
+    color: white;
+}

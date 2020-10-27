@@ -40,18 +40,17 @@ this.socket.on('updateStory', function (storyInfo) {
 
 // Show the team consensus
 this.socket.on('showScore', function (score) {
-    console.log("Score: "+score);
+    console.log("Score: " + score);
     document.getElementById('scorePanel').innerText = score;
 });
 
 // Receive the list of stories in the session from the server and add them to our list.
-this.socket.on('storiesList', function(stories){
-    console.log("Received active stories from server: " + stories);
+this.socket.on('storiesList', function (stories) {
     //Replace all items in the lit with what has come from the server.
     //Host should be able to add, remove, reorder, which should be reflected in the client.
     document.getElementById('pendingStories').innerHTML = ''
-    stories.forEach(function(story){
-        if(story !== undefined){
+    stories.forEach(function (story) {
+        if (story !== undefined) {
             updateStoriesList(story);
         }
     });
@@ -91,26 +90,58 @@ function ShowScore() {
 }
 
 // Add a new story from the user input.
-function addStory(){
+function addStory() {
     let newStory = document.getElementById("newStoryTitle")
     let storyText = newStory.value;
-    this.socket.emit('newStoryByUser', storyText)
+    if (storyText !== '') {
+        this.socket.emit('newStoryByUser', storyText)
+    }
     newStory.value = ''
 }
 
 // Update our stories list to include the given story.
-function updateStoriesList(newStory){
+function updateStoriesList(newStory) {
     let newStoryDiv = document.createElement("div")
     newStoryDiv.className = "Story"
-    newStoryDiv.innerText = newStory
-    
+    let deleteButton = document.createElement("span")
+    deleteButton.innerText = 'x'
+    deleteButton.setAttribute("class", "StoryDeleteButton")
+
+    let text = document.createElement("span")
+    text.setAttribute("class", "StoryTitleText")
+    text.innerText = newStory
+
+    newStoryDiv.appendChild(deleteButton);
+    newStoryDiv.appendChild(text)
+
     document.getElementById('pendingStories').appendChild(newStoryDiv)
 }
 
-//Allow a user to submit a new story by pressing 'Return'
-document.getElementById('newStoryTitle').addEventListener("keydown", function(e) {
-    if (!e) { var e = window.event; }
-    if (e.keyCode == 13) {e.preventDefault();
-         addStory(); 
+function deleteStoryItem(elem) {
+    let storyText;
+    for (let i = 0; i < elem.childNodes.length; i++) {
+        let node = elem.childNodes[i]
+        if (node.className === "StoryTitleText") {
+            storyText = node.innerText;
         }
+    }
+    if (storyText !== undefined) {
+        this.socket.emit('deleteStoryByUser', storyText);
+    }
+}
+
+//Allow a user to submit a new story by pressing 'Return'
+document.getElementById('newStoryTitle').addEventListener("keydown", function (e) {
+    if (!e) { var e = window.event; }
+    if (e.keyCode == 13) {
+        e.preventDefault();
+        addStory();
+    }
 }, false);
+
+// Add event listener for deleting a story.
+document.addEventListener('click', function (e) {
+    if (e.target && e.target.className === 'StoryDeleteButton') {
+        deleteStoryItem(e.target.parentNode)
+    }
+});
