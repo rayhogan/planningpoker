@@ -30,18 +30,6 @@ io.on('connection', function (socket) {
         roomID: 0
     };
 
-    // update all other users of the new user
-    //socket.broadcast.emit('newUser', connections[socket.id]);
-
-    // send the users object to the new user
-    //socket.emit('currentUsers', connections);
-
-    // Send the list of stories to newly connected users.
-    //socket.emit('storiesList', stories)
-
-    // send connected user the current story
-    //socket.emit('updateStory', activeStory);
-
     socket.on('disconnect', function () {
 
         console.log('user disconnected');
