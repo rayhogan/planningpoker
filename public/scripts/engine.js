@@ -120,7 +120,7 @@ document.getElementById('newStoryTitle').addEventListener("keydown", function (e
 //Create room
 function createRoom() {
     let username = document.getElementById('createRoomName').value;
-    if (username != null) {
+    if (username != null && username !== '') {
         this.socket.emit('joinRoom', username, null);
     }
 }
@@ -128,7 +128,7 @@ function createRoom() {
 function joinRoom() {
     let username = document.getElementById('joinRoomName').value;
     let room = document.getElementById('joinRoomID').value;
-    if (username != null && room != null) {
+    if (username != null && username !== '' && room != null && room !== '') {
         this.socket.emit('joinRoom', username, room);
     }
 }
