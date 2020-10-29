@@ -305,3 +305,7 @@ button:focus {
     background-color: red;
     color: white;
 }
+
+.StoryDeleteButton {
+    cursor: pointer;
+}
