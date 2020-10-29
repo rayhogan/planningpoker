@@ -2,6 +2,7 @@
 this.socket = io();
 
 var connectedUsers = {};
+var roomID = 0;
 
 // Draw all players upon first joining
 this.socket.on('currentUsers', function (users) {
@@ -62,7 +63,7 @@ function editFinished() {
     document.getElementById('storyDisplay').style.display = "block";
 
     // Push update back to server
-    this.socket.emit('storyUpdatedByUser', document.getElementById('storyTitle').value);
+    this.socket.emit('storyUpdatedByUser', document.getElementById('storyTitle').value, roomID);
 }
 
 document.getElementById('storyDisplay')
@@ -77,26 +78,26 @@ document.getElementById('storyDisplay')
 function UpdateName() {
     console.log(document.getElementById('username').value);
     // Push update back to server
-    this.socket.emit('nameUpdatedByUser', document.getElementById('username').value);
+    this.socket.emit('nameUpdatedByUser', document.getElementById('username').value, roomID);
 
 }
 
 function SubmitScore(element) {
-    this.socket.emit('submitScore', parseInt(element.getAttribute("value")));
+    this.socket.emit('submitScore', parseInt(element.getAttribute("value")), roomID);
 }
 
 function ShowScore() {
-    this.socket.emit('getScore');
+    this.socket.emit('getScore', roomID);
 }
 
 // Add a new story from the user input.
 function addStory() {
-    let newStory = document.getElementById("newStoryTitle")
+    let newStory = document.getElementById("newStoryTitle");
     let storyText = newStory.value;
     if (storyText !== '') {
-        this.socket.emit('newStoryByUser', storyText)
+        this.socket.emit('newStoryByUser', storyText, roomID);
     }
-    newStory.value = ''
+    newStory.value = '';
 }
 
 // Update our stories list to include the given story.
@@ -126,7 +127,7 @@ function deleteStoryItem(elem) {
         }
     }
     if (storyText !== undefined) {
-        this.socket.emit('deleteStoryByUser', storyText);
+        this.socket.emit('deleteStoryByUser', storyText, roomID);
     }
 }
 
@@ -144,4 +145,62 @@ document.addEventListener('click', function (e) {
     if (e.target && e.target.className === 'StoryDeleteButton') {
         deleteStoryItem(e.target.parentNode)
     }
+});
+
+//Create room
+function createRoom() {
+    let username = document.getElementById('createRoomName').value;
+    if (username != null) {
+        this.socket.emit('joinRoom', username, null);
+    }
+}
+//join room
+function joinRoom() {
+    let username = document.getElementById('joinRoomName').value;
+    let room = document.getElementById('joinRoomID').value;
+    if (username != null && room != null) {
+        this.socket.emit('joinRoom', username, room);
+    }
+}
+
+// Show the poker UI
+this.socket.on('startSession', function (room, roomDetails) {
+
+    // Set Room ID
+    roomID = room;
+
+    document.getElementById('roomID').value = roomID;
+
+    // Render pending the stories
+    document.getElementById('pendingStories').innerHTML = '';
+    roomDetails.stories.forEach(function (story) {
+        if (story !== undefined) {
+            updateStoriesList(story);
+        }
+    });
+
+    // Set the current story
+    document.getElementById('storyDisplay').innerText = roomDetails.stories[roomDetails.activeStory];
+
+    // Hide joining options and show poker UI
+    document.getElementById('joinOptions').style.display = 'none';
+    document.getElementById('Poker').style.display = 'block';
+
+    // Set click handlers for tabs
+    document.getElementById('usersButton')
+    .addEventListener('click', function (event) {
+        document.getElementById('usersButton').className = 'selected';
+        document.getElementById('backlogButton').className = '';
+        document.getElementById('StoriesPanel').style.display = "none";
+        document.getElementById('UsersPanel').style.display = "block";
+    });
+
+    document.getElementById('backlogButton')
+    .addEventListener('click', function (event) {
+        document.getElementById('backlogButton').className = 'selected';
+        document.getElementById('usersButton').className = '';
+        document.getElementById('UsersPanel').style.display = "none";
+        document.getElementById('StoriesPanel').style.display = "block";
+    });
+
 });

@@ -9,11 +9,9 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-
-// Store all user
+// Session Memory
 var connections = {};
-var stories = ["As a User, I would like X, so that Y", "As a User, I want Z"];
-var activeStory = stories[0];
+var rooms = {};
 
 // Socket.io
 var io = require('socket.io')(server, {
@@ -28,84 +26,149 @@ io.on('connection', function (socket) {
     connections[socket.id] = {
         name: "User",
         userId: socket.id,
-        score: 0
+        score: 0,
+        roomID: 0
     };
 
     // update all other users of the new user
-    socket.broadcast.emit('newUser', connections[socket.id]);
+    //socket.broadcast.emit('newUser', connections[socket.id]);
 
     // send the users object to the new user
-    socket.emit('currentUsers', connections);
+    //socket.emit('currentUsers', connections);
 
     // Send the list of stories to newly connected users.
-    socket.emit('storiesList', stories)
+    //socket.emit('storiesList', stories)
 
     // send connected user the current story
-    socket.emit('updateStory', activeStory);
+    //socket.emit('updateStory', activeStory);
 
     socket.on('disconnect', function () {
 
         console.log('user disconnected');
         // remove this user from our connections object
+        let userRoom = connections[socket.id].roomID;
+        
+        // If user is connected to a room
+        if (userRoom != 0) {            
+           
+            delete rooms[userRoom].users[socket.id];
+            // If room is empty, then remove it from memory
+            if (Object.keys(rooms[userRoom].users).length === 0) {
+                delete rooms[userRoom];
+                console.log(userRoom+" is empty, has now been deleted");
+            }
+
+             // emit to other room members that this user has left
+             io.to(userRoom).emit('disconnect', socket.id);
+        }
+
         delete connections[socket.id];
 
-        // emit a message to all users to remove this user
-        io.emit('disconnect', socket.id);
+    });
 
+    // When a user joins or starts a session
+    socket.on('joinRoom', function (username, room) {
+
+        // Change the user's name
+        connections[socket.id].name = username;
+
+        if (room != null) {
+            if (rooms[room] != null) {
+                // Join a room
+                socket.join(room);
+                // Add user to room's user list
+                rooms[room].users[socket.id] = connections[socket.id];
+                // Update the connected user's room ID so we know what room they belong to
+                // when they disconnect.
+                connections[socket.id].roomID = room;
+                // Send user current userlist
+                io.to(room).emit('currentUsers', rooms[room].users);
+                // Start the session
+                socket.emit('startSession', room, rooms[room]);
+
+            }
+            else {
+                // TODO: Notify user that room doesn't exist
+            }
+        }
+        else {
+            // Create & Join the room
+            socket.join(socket.id);
+            // Update the connected user's room ID so we know what room they belong to
+            // when they disconnect.
+            connections[socket.id].roomID = socket.id;
+            rooms[socket.id] = {
+                users: {},
+                stories: ["As a User, I would like X, so that Y", "As a User, I want Z"],
+                activeStory: 0
+            };
+
+            // Add user to the room's user list
+            rooms[socket.id].users[socket.id] = connections[socket.id];
+
+            // Send the creator the list of users (themselves only at this point)
+            socket.emit('currentUsers', rooms[socket.id].users);
+
+            // Start the session
+            socket.emit('startSession', socket.id, rooms[socket.id]);
+
+        }
     });
 
     // When a user updates the story details
-    socket.on('storyUpdatedByUser', function (storyText) {
-        // Emit a message to all users with the update story title.
-        storyName = storyText;
-        socket.broadcast.emit('updateStory', storyName);
+    socket.on('storyUpdatedByUser', function (storyText, room) {
+        // Update active story title and emit to all users in the room
+        rooms[room].stories[rooms[room].activeStory] = storyText;
+        io.to(room).emit('updateStory', storyText);
     });
 
     // When a user submits a new story
-    socket.on('newStoryByUser', function (newStoryTitle) {
+    socket.on('newStoryByUser', function (newStoryTitle, room) {
         console.log("New story created: " + newStoryTitle);
-        stories.push(newStoryTitle);
+        rooms[room].stories.push(newStoryTitle);
 
-        //Send to everyone to stay in sync. TODO: With private sessions can emit to all in room.
-        io.emit('storiesList', stories)
+        //Send to everyone to stay in sync.
+        io.to(room).emit('storiesList', rooms[room].stories)
     });
 
     // When a user deletes a story
-    socket.on('deleteStoryByUser', function (story) {
-        console.log("Received request to remove " + story);
+    socket.on('deleteStoryByUser', function (story, room) {
+        console.log("Received request to remove " + story + " from room " + room);
     
-        let storyIndex = stories.indexOf(story)
+        let storyIndex = rooms[room].stories.indexOf(story)
         if(storyIndex > -1){
-            stories.splice(storyIndex, 1);
-            io.emit('storiesList', stories)
+            rooms[room].stories.splice(storyIndex, 1);
+            io.to(room).emit('storiesList', rooms[room].stories)
         }
     });
 
     // When a user updates their display name
-    socket.on('nameUpdatedByUser', function (username) {
+    socket.on('nameUpdatedByUser', function (username, room) {
         connections[socket.id].name = username;
+        rooms[room].users[socket.id].name = username;
         // Emit name change to users
-        io.emit('currentUsers', connections);
+        io.to(room).emit('currentUsers', rooms[room].users);
     });
 
     // When a user casts a vote
-    socket.on('submitScore', function (score) {
+    socket.on('submitScore', function (score, room) {
         connections[socket.id].score = score;
+        rooms[room].users[socket.id].score = score;
         // Emit score to all users
-        io.emit('currentUsers', connections);
+        io.to(room).emit('currentUsers', rooms[room].users);
     });
 
-    // When a user casts a vote
-    socket.on('getScore', function () {
+    // When a user requests score
+    socket.on('getScore', function (room) {
         // calculate score      
         var score = 0;
-        Object.keys(connections).forEach(function (id) {
+        Object.keys(rooms[room].users).forEach(function (id) {
             score += connections[id].score;
         });
-        score = score / Object.keys(connections).length;
+        score = score / Object.keys(rooms[room].users).length;
 
         // Emit score to all users
-        io.emit('showScore', score);
+        io.to(room).emit('showScore', score);
     });
 
 });

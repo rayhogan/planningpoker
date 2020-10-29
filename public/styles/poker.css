@@ -80,7 +80,6 @@ h1 {
 
 .NewStory input {
     width: 600px;
-    height: 30px;
     border-radius: 10px;
     padding: 10px;
     font-size: 20px;
@@ -89,6 +88,7 @@ h1 {
     border: none;
     border-radius: 0px;
     font-weight: normal;
+    border-radius: 5px;
 }
 
 .StoriesPanel {
@@ -110,18 +110,18 @@ h1 {
     padding: 5px;
 }
 
-#pendingStories .Story{
-    margin: 10px;    
+#pendingStories .Story {
+    margin: 10px;
     font-size: calc(10px + 2vmin);
 }
 
-.AddStory{
+.AddStory {
     border-radius: 10px;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 5px; 
+    padding: 5px;
 }
 
 .ClearScores {
@@ -192,19 +192,116 @@ h1 {
     border-radius: 10px;
 }
 
-button:hover{
-cursor: pointer;
+button:hover {
+    cursor: pointer;
 }
 
-button:focus
+button:focus {
+    outline: none;
+}
+
+#joinOptions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#joinOptions span {
+    font-size: 20px;
+    padding-bottom: 10px;
+}
+
+#joinOptions input {
+    height: 25px;
+}
+
+#joinOptions button {
+    width: 100%;
+    margin: 10px;
+    padding: 16px 24px;
+    border: 1px solid black;
+    border-radius: 10px;
+    vertical-align: bottom;
+    background-color: #F0AF1D;
+}
+
+.Option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    margin: 10px;
+    height: 200px;
+    width: 250px;
+    border: 1px solid black;
+}
+
+.Option div{
+    align-items: center;
+    height: 100px;
+}
+
+.CreateSession
 {
-    outline:none;
+    background-color: #9BD5EF;
+}
+
+.JoinSession
+{
+    background-color: #9BD5EF;
+}
+
+.RoomIDPanel
+{
+    font-size: 20px;
+    padding: 10px;
+    color: #f1f199;
+}
+
+.RoomIDPanel input
+{
+    font-size: 20px;
+    background-color: #6fbeec;
+    color: white;
+    border: 0px solid gray;
+    margin: 5px;
+}
+
+.RoomIDPanel input:focus
+{
+    font-size: 20px;
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 0px;
+    font-weight: normal;
+    margin: 5px;
+}
+
+.TabPanel
+{
+    width: 100%;
+}
+
+.TabPanel button
+{
+    height: 30px;
+    width: 100px;
+    border: 0px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: lightgray;
+}
+
+.TabPanel .selected
+{
+    background-color: white;
 }
 
 .StoryDeleteButton {
     padding: 2px;
     margin-right: 5px;
-    border: 1px solid white; 
+    border: 1px solid white;
     background-color: red;
     color: white;
 }
