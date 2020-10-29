@@ -306,6 +306,6 @@ button:focus {
     color: white;
 }
 
-.StoryDeleteButton {
+.StoryDeleteButton:hover {
     cursor: pointer;
 }
