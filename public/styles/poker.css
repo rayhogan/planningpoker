@@ -297,3 +297,15 @@ button:focus {
 {
     background-color: white;
 }
+
+.StoryDeleteButton {
+    padding: 2px;
+    margin-right: 5px;
+    border: 1px solid white;
+    background-color: red;
+    color: white;
+}
+
+.StoryDeleteButton:hover {
+    cursor: pointer;
+}

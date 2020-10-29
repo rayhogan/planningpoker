@@ -119,6 +119,17 @@ io.on('connection', function (socket) {
         io.to(room).emit('storiesList', rooms[room].stories)
     });
 
+    // When a user deletes a story
+    socket.on('deleteStoryByUser', function (story, room) {
+        console.log("Received request to remove " + story + " from room " + room);
+    
+        let storyIndex = rooms[room].stories.indexOf(story)
+        if(storyIndex > -1){
+            rooms[room].stories.splice(storyIndex, 1);
+            io.to(room).emit('storiesList', rooms[room].stories)
+        }
+    });
+
     // When a user updates their display name
     socket.on('nameUpdatedByUser', function (username, room) {
         connections[socket.id].name = username;
