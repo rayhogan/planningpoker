@@ -35,19 +35,19 @@ io.on('connection', function (socket) {
         console.log('user disconnected');
         // remove this user from our connections object
         let userRoom = connections[socket.id].roomID;
-        
+
         // If user is connected to a room
-        if (userRoom != 0) {            
-           
+        if (userRoom != 0) {
+
             delete rooms[userRoom].users[socket.id];
             // If room is empty, then remove it from memory
             if (Object.keys(rooms[userRoom].users).length === 0) {
                 delete rooms[userRoom];
-                console.log(userRoom+" is empty, has now been deleted");
+                console.log(userRoom + " is empty, has now been deleted");
             }
 
-             // emit to other room members that this user has left
-             io.to(userRoom).emit('disconnect', socket.id);
+            // emit to other room members that this user has left
+            io.to(userRoom).emit('disconnect', socket.id);
         }
 
         delete connections[socket.id];
@@ -122,9 +122,9 @@ io.on('connection', function (socket) {
     // When a user deletes a story
     socket.on('deleteStoryByUser', function (story, room) {
         console.log("Received request to remove " + story + " from room " + room);
-    
+
         let storyIndex = rooms[room].stories.indexOf(story)
-        if(storyIndex > -1){
+        if (storyIndex > -1) {
             rooms[room].stories.splice(storyIndex, 1);
             io.to(room).emit('storiesList', rooms[room].stories)
         }
@@ -140,23 +140,35 @@ io.on('connection', function (socket) {
 
     // When a user casts a vote
     socket.on('submitScore', function (score, room) {
-        connections[socket.id].score = score;
-        rooms[room].users[socket.id].score = score;
-        // Emit score to all users
-        io.to(room).emit('currentUsers', rooms[room].users);
+        if (connections[socket.id].roomID != 0) {
+            connections[socket.id].score = score;
+            rooms[room].users[socket.id].score = score;
+            // Emit score to all users
+            io.to(room).emit('currentUsers', rooms[room].users);
+        }
     });
 
     // When a user requests score
     socket.on('getScore', function (room) {
-        // calculate score      
-        var score = 0;
-        Object.keys(rooms[room].users).forEach(function (id) {
-            score += connections[id].score;
-        });
-        score = score / Object.keys(rooms[room].users).length;
+        if (connections[socket.id].roomID != 0) {
+            // calculate score      
+            let score = 0;
+            let participants = 0;
+            Object.keys(rooms[room].users).forEach(function (id) {
+                if (connections[id].score != 0) {
 
-        // Emit score to all users
-        io.to(room).emit('showScore', score);
+                    score += connections[id].score;
+                    participants++;
+                }
+            });
+
+            if (participants > 0) {
+                score = score / participants;
+            }
+
+            // Emit score to all users
+            io.to(room).emit('showScore', score);
+        }
     });
 
 });
