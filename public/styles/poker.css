@@ -99,6 +99,8 @@ h1 {
     align-items: center;
     padding: 5px;
     border: 1px solid black;
+    min-height: 200px;
+    max-width: 620px;
 }
 
 #pendingStories {
@@ -112,7 +114,7 @@ h1 {
 
 #pendingStories .Story {
     margin: 10px;
-    font-size: calc(10px + 2vmin);
+    font-size: 18px;
 }
 
 .AddStory {
@@ -129,7 +131,6 @@ h1 {
 }
 
 .Social-Buttons {
-    margin-top: 30px;
     display: flex;
     flex-direction: row;
 }
@@ -170,10 +171,14 @@ h1 {
     flex-direction: column;
     padding: 5px;
     min-height: 200px;
+    max-width: 620px;
 }
 
 #UserList {
     font-size: 15px;
+    display: grid;
+    grid-template-columns: 200px 100px;
+    margin-left: 10px;
 }
 
 #UserList div {
@@ -213,6 +218,7 @@ button:focus {
 
 #joinOptions input {
     height: 25px;
+    margin-bottom: 5px;
 }
 
 #joinOptions button {
@@ -236,30 +242,26 @@ button:focus {
     border: 1px solid black;
 }
 
-.Option div{
+.Option div {
     align-items: center;
     height: 100px;
 }
 
-.CreateSession
-{
+.CreateSession {
     background-color: #9BD5EF;
 }
 
-.JoinSession
-{
+.JoinSession {
     background-color: #9BD5EF;
 }
 
-.RoomIDPanel
-{
+.RoomIDPanel {
     font-size: 20px;
     padding: 10px;
     color: #f1f199;
 }
 
-.RoomIDPanel input
-{
+.RoomIDPanel input {
     font-size: 20px;
     background-color: #6fbeec;
     color: white;
@@ -267,8 +269,7 @@ button:focus {
     margin: 5px;
 }
 
-.RoomIDPanel input:focus
-{
+.RoomIDPanel input:focus {
     font-size: 20px;
     background-color: white;
     color: black;
@@ -278,13 +279,11 @@ button:focus {
     margin: 5px;
 }
 
-.TabPanel
-{
+.TabPanel {
     width: 100%;
 }
 
-.TabPanel button
-{
+.TabPanel button {
     height: 30px;
     width: 100px;
     border: 0px;
@@ -293,8 +292,7 @@ button:focus {
     background-color: lightgray;
 }
 
-.TabPanel .selected
-{
+.TabPanel .selected {
     background-color: white;
 }
 

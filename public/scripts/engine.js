@@ -26,9 +26,9 @@ this.socket.on('disconnect', function (userId) {
 
 // Add the users to the webpage
 function RenderUsers() {
-    var userMarkup = '';
+    var userMarkup = '<div><b>Name</b></div><div><b>Score</b></div>';
     Object.keys(connectedUsers).forEach(function (id) {
-        userMarkup += '<div>' + connectedUsers[id].name + ' ' + connectedUsers[id].score + ' </div > ';
+        userMarkup += '<div>' + connectedUsers[id].name + '</div><div>' + connectedUsers[id].score + ' </div > ';
     });
 
     document.getElementById('UserList').innerHTML = userMarkup;
@@ -188,19 +188,19 @@ this.socket.on('startSession', function (room, roomDetails) {
 
     // Set click handlers for tabs
     document.getElementById('usersButton')
-    .addEventListener('click', function (event) {
-        document.getElementById('usersButton').className = 'selected';
-        document.getElementById('backlogButton').className = '';
-        document.getElementById('StoriesPanel').style.display = "none";
-        document.getElementById('UsersPanel').style.display = "block";
-    });
+        .addEventListener('click', function (event) {
+            document.getElementById('usersButton').className = 'selected';
+            document.getElementById('backlogButton').className = '';
+            document.getElementById('StoriesPanel').style.display = "none";
+            document.getElementById('UsersPanel').style.display = "block";
+        });
 
     document.getElementById('backlogButton')
-    .addEventListener('click', function (event) {
-        document.getElementById('backlogButton').className = 'selected';
-        document.getElementById('usersButton').className = '';
-        document.getElementById('UsersPanel').style.display = "none";
-        document.getElementById('StoriesPanel').style.display = "block";
-    });
+        .addEventListener('click', function (event) {
+            document.getElementById('backlogButton').className = 'selected';
+            document.getElementById('usersButton').className = '';
+            document.getElementById('UsersPanel').style.display = "none";
+            document.getElementById('StoriesPanel').style.display = "block";
+        });
 
 });
