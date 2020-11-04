@@ -40,6 +40,7 @@ io.on('connection', function (socket) {
         if (userRoom != 0) {
 
             delete rooms[userRoom].users[socket.id];
+            delete rooms[userRoom].hiddenScores[socket.id];
             // If room is empty, then remove it from memory
             if (Object.keys(rooms[userRoom].users).length === 0) {
                 delete rooms[userRoom];
@@ -66,13 +67,24 @@ io.on('connection', function (socket) {
                 socket.join(room);
                 // Add user to room's user list
                 rooms[room].users[socket.id] = connections[socket.id];
+                rooms[room].hiddenScores[socket.id] = {
+                    name: connections[socket.id].name,
+                    score: 0
+                };
                 // Update the connected user's room ID so we know what room they belong to
                 // when they disconnect.
                 connections[socket.id].roomID = room;
-                // Send user current userlist
-                io.to(room).emit('currentUsers', rooms[room].users);
+
+                // Send user current userlist (but check if we are currently showing results)
+                if (rooms[room].showResults) {
+                    io.to(room).emit('currentUsers', rooms[room].users);
+                }
+                else {
+                    io.to(room).emit('currentUsers', rooms[room].hiddenScores);
+                }
+
                 // Start the session
-                socket.emit('startSession', room, rooms[room]);
+                socket.emit('startSession', room, rooms[room], socket.id);
 
             }
             else {
@@ -88,17 +100,23 @@ io.on('connection', function (socket) {
             rooms[socket.id] = {
                 users: {},
                 stories: ["As a User, I would like X, so that Y", "As a User, I want Z"],
-                activeStory: 0
+                activeStory: 0,
+                showResults: false,
+                hiddenScores: {}
             };
 
             // Add user to the room's user list
             rooms[socket.id].users[socket.id] = connections[socket.id];
+            rooms[socket.id].hiddenScores[socket.id] = {
+                name: connections[socket.id].name,
+                score: 0
+            };
 
             // Send the creator the list of users (themselves only at this point)
             socket.emit('currentUsers', rooms[socket.id].users);
 
             // Start the session
-            socket.emit('startSession', socket.id, rooms[socket.id]);
+            socket.emit('startSession', socket.id, rooms[socket.id], socket.id);
 
         }
     });
@@ -139,12 +157,33 @@ io.on('connection', function (socket) {
     });
 
     // When a user casts a vote
-    socket.on('submitScore', function (score, room) {
+    socket.on('submitScore', function (score) {
         if (connections[socket.id].roomID != 0) {
-            connections[socket.id].score = score;
-            rooms[room].users[socket.id].score = score;
-            // Emit score to all users
-            io.to(room).emit('currentUsers', rooms[room].users);
+            let room = connections[socket.id].roomID;
+            if (!rooms[room].showResults) {
+                rooms[room].users[socket.id].score = score;
+                rooms[room].hiddenScores[socket.id].score = "Voted!";
+                // Emit score to all users
+                io.to(room).emit('userVoted', rooms[room].hiddenScores);
+            }
+        }
+    });
+
+    // When a user casts a vote
+    socket.on('clearScore', function (score) {
+        if (connections[socket.id].roomID != 0) {
+            let room = connections[socket.id].roomID;
+            if (rooms[room].showResults) {
+                // Reset the hidden score object
+                Object.keys(rooms[room].users).forEach(function (id) {
+                    rooms[room].users[id].score = 0;
+                    rooms[room].hiddenScores[id].score = 0;
+                });
+                // Send update users object with the actual scores 
+                io.to(room).emit('showScore', 0);
+                io.to(room).emit('currentUsers', rooms[room].hiddenScores);
+                rooms[room].showResults = false;
+            }
         }
     });
 
@@ -154,10 +193,12 @@ io.on('connection', function (socket) {
             // calculate score      
             let score = 0;
             let participants = 0;
+            let room = connections[socket.id].roomID;
             Object.keys(rooms[room].users).forEach(function (id) {
-                if (connections[id].score != 0) {
+                if (rooms[room].users[id].score != 0) {
 
-                    score += connections[id].score;
+                    console.log(rooms[room].users[id].score);
+                    score += rooms[room].users[id].score;
                     participants++;
                 }
             });
@@ -168,6 +209,9 @@ io.on('connection', function (socket) {
 
             // Emit score to all users
             io.to(room).emit('showScore', score);
+            rooms[room].showResults = true;
+            // Send update users object with the actual scores 
+            io.to(room).emit('currentUsers', rooms[room].users);
         }
     });
 

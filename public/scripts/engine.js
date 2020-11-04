@@ -3,12 +3,12 @@ this.socket = io();
 
 var connectedUsers = {};
 var roomID = 0;
+var myID = 0;
+var myScore = 0;
 
 // Draw all players upon first joining
 this.socket.on('currentUsers', function (users) {
-    Object.keys(users).forEach(function (id) {
-        connectedUsers[users[id].userId] = users[id];
-    });
+    connectedUsers = users;
     RenderUsers();
 });
 
@@ -28,11 +28,22 @@ this.socket.on('disconnect', function (userId) {
 function RenderUsers() {
     var userMarkup = '<div><b>Name</b></div><div><b>Score</b></div>';
     Object.keys(connectedUsers).forEach(function (id) {
-        userMarkup += '<div>' + connectedUsers[id].name + '</div><div>' + connectedUsers[id].score + ' </div > ';
+        if (id == myID && connectedUsers[id].score != 0) {
+            userMarkup += '<div>' + connectedUsers[id].name + '</div><div>' + myScore + ' </div > ';
+        }
+        else {
+            userMarkup += '<div>' + connectedUsers[id].name + '</div><div>' + connectedUsers[id].score + ' </div > ';
+        }
+
     });
 
     document.getElementById('UserList').innerHTML = userMarkup;
 }
+
+this.socket.on('userVoted', function (scores) {
+    connectedUsers = scores;
+    RenderUsers();
+});
 
 // Apply update if a connected user updates the story title
 this.socket.on('updateStory', function (storyInfo) {
@@ -44,6 +55,7 @@ this.socket.on('showScore', function (score) {
     console.log("Score: " + score);
     document.getElementById('scorePanel').innerText = score;
 });
+
 
 // Receive the list of stories in the session from the server and add them to our list.
 this.socket.on('storiesList', function (stories) {
@@ -83,11 +95,16 @@ function UpdateName() {
 }
 
 function SubmitScore(element) {
+    myScore = parseInt(element.getAttribute("value"));
     this.socket.emit('submitScore', parseInt(element.getAttribute("value")), roomID);
 }
 
 function ShowScore() {
-    this.socket.emit('getScore', roomID);
+    this.socket.emit('getScore');
+}
+
+function ResetScore() {
+    this.socket.emit('clearScore');
 }
 
 // Add a new story from the user input.
@@ -164,10 +181,11 @@ function joinRoom() {
 }
 
 // Show the poker UI
-this.socket.on('startSession', function (room, roomDetails) {
+this.socket.on('startSession', function (room, roomDetails, userID) {
 
     // Set Room ID
     roomID = room;
+    myID = userID;
 
     document.getElementById('roomID').value = roomID;
 
