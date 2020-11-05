@@ -121,8 +121,8 @@ function addStory() {
 function updateStoriesList(newStory) {
     let newStoryDiv = document.createElement("div")
     newStoryDiv.className = "Story"
-    let deleteButton = document.createElement("span")
-    deleteButton.innerText = 'x'
+    let deleteButton = document.createElement("img")
+    deleteButton.src = '/assets/delete.png'
     deleteButton.setAttribute("class", "StoryDeleteButton")
 
     let text = document.createElement("span")
