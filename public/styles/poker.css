@@ -82,7 +82,7 @@ h1 {
     width: 600px;
     border-radius: 10px;
     padding: 10px;
-    font-size: 20px;
+    font-size: 15px;
     background-color: white;
     color: black;
     border: none;
@@ -109,11 +109,11 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: left;
-    padding: 5px;
+    padding-top: 15px;
 }
 
 #pendingStories .Story {
-    margin: 10px;
+    margin-bottom: 10px;
     font-size: 18px;
 }
 
@@ -217,18 +217,27 @@ button:focus {
 }
 
 #joinOptions input {
-    height: 25px;
+    height: 30px;
     margin-bottom: 5px;
+    padding-left: 10px;
+    border-color: #0000007a;
+    width: 200px;
+    border-radius: 5px;
+}
+
+#joinOptions input:focus {
+    outline: none;
 }
 
 #joinOptions button {
     width: 100%;
     margin: 10px;
     padding: 16px 24px;
-    border: 1px solid black;
+    border: 2px solid #757474;
     border-radius: 10px;
     vertical-align: bottom;
     background-color: #F0AF1D;
+    color: #040404;
 }
 
 .Option {
@@ -239,7 +248,8 @@ button:focus {
     margin: 10px;
     height: 200px;
     width: 250px;
-    border: 1px solid black;
+    border: 2px solid #00000073;
+    border-radius: 5px;
 }
 
 .Option div {
@@ -299,9 +309,7 @@ button:focus {
 .StoryDeleteButton {
     padding: 2px;
     margin-right: 5px;
-    border: 1px solid white;
-    background-color: red;
-    color: white;
+    height: 15px;
 }
 
 .StoryDeleteButton:hover {

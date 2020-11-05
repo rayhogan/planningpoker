@@ -126,6 +126,7 @@ io.on('connection', function (socket) {
         // Update active story title and emit to all users in the room
         rooms[room].stories[rooms[room].activeStory] = storyText;
         io.to(room).emit('updateStory', storyText);
+        io.to(room).emit('storiesList', rooms[room].stories)
     });
 
     // When a user submits a new story
