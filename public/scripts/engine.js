@@ -185,13 +185,15 @@ document.addEventListener('click', function (e) {
     if (e.target && e.target.className === 'StoryTitleText') {
         let id = e.target.getAttribute("id")
         let storyKey = getStoryKeyFromId(id);
-        document.getElementById("storyDisplay").innerText = e.target.innerText
-        selectStory(storyKey)
+        selectStory(storyKey, e.target.innerText)
     }
 });
 
-function selectStory(key) {
-    this.socket.emit('selectStoryByUser', roomID, key)
+function selectStory(key, storyText) {
+    if(confirm(storyText + "\nSelect this as active story?")){
+        document.getElementById("storyDisplay").innerText = storyText
+        this.socket.emit('selectStoryByUser', roomID, key)
+    }
 }
 
 function getStoryKeyFromId(id) {
