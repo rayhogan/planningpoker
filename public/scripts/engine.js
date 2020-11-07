@@ -56,9 +56,9 @@ this.socket.on('showScore', function (score) {
     document.getElementById('scorePanel').innerText = score;
 });
 
+// When we receive a request to change the active session.
 this.socket.on('selectStoryAsActive', function (key) {
     let activeStoryText = "Add some stories to start a session!"
-    console.log(key)
     if (key === null) {
         console.log("No active story");
     } else {
@@ -66,9 +66,11 @@ this.socket.on('selectStoryAsActive', function (key) {
         let activeStoryInBacklog = document.getElementById("story_" + key);
         activeStoryText = activeStoryInBacklog.innerText
     }
+
     let storyDisplay = document.getElementById("storyDisplay")
     storyDisplay.innerText = activeStoryText
 })
+
 // Receive the list of stories in the session from the server and add them to our list.
 this.socket.on('storiesList', function (stories) {
     //Replace all items in the lit with what has come from the server.
@@ -88,7 +90,7 @@ function editFinished() {
     document.getElementById('storyDisplay').style.display = "block";
 
     // Push update back to server
-    this.socket.emit('storyUpdatedByUser', document.getElementById('storyTitle').value, roomID, "99");
+    this.socket.emit('storyUpdatedByUser', document.getElementById('storyTitle').value, roomID);
 }
 
 document.getElementById('storyDisplay')
@@ -179,9 +181,6 @@ document.addEventListener('click', function (e) {
     }
 });
 
-function getStoryKeyFromId(id) {
-    return id.substring(6);//Substring after "story_" part of id.
-}
 document.addEventListener('click', function (e) {
     if (e.target && e.target.className === 'StoryTitleText') {
         let id = e.target.getAttribute("id")
@@ -194,6 +193,11 @@ document.addEventListener('click', function (e) {
 function selectStory(key) {
     this.socket.emit('selectStoryByUser', roomID, key)
 }
+
+function getStoryKeyFromId(id) {
+    return id.substring(6);//Substring after "story_" part of id.
+}
+
 //Create room
 function createRoom() {
     let username = document.getElementById('createRoomName').value;

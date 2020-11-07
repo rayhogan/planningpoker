@@ -1,4 +1,3 @@
-const { Console } = require('console');
 // Server stuff goes here
 var express = require('express');
 var app = express();
@@ -123,16 +122,17 @@ io.on('connection', function (socket) {
     });
 
     // When a user updates the story details
-    socket.on('storyUpdatedByUser', function (storyText, room, key) {
-        console.log("Update story with key " + key + " with text : " + storyText);
+    socket.on('storyUpdatedByUser', function (storyText, room) {
         // Update active story title and emit to all users in the room
-        rooms[room].stories[rooms[room].activeStory] = storyText;
-        io.to(room).emit('updateStory', storyText);
-        io.to(room).emit('storiesList', rooms[room].stories)
+        if(rooms[room].activeStory !== undefined){
+            rooms[room].stories[rooms[room].activeStory] = storyText;
+            io.to(room).emit('updateStory', storyText);
+            io.to(room).emit('storiesList', rooms[room].stories)
+        }
     });
 
+    // When a user selects a new active story
     socket.on('selectStoryByUser', function (room, key) {
-        console.log("Received request to select new story with key: " + key);
         rooms[room].activeStory = key;
         io.to(room).emit('selectStoryAsActive', key);
     });
@@ -140,11 +140,9 @@ io.on('connection', function (socket) {
     // When a user submits a new story
     socket.on('newStoryByUser', function (newStoryTitle, room) {
         console.log("New story created: " + newStoryTitle);
-        let id = generateNewRandomId();
+        let id = generateId();
         rooms[room].stories[id] = newStoryTitle;
         console.log(rooms[room].activeStory)
-
-        // rooms[room].stories.push(newStoryTitle);
 
         //Send to everyone to stay in sync.
         io.to(room).emit('storiesList', rooms[room].stories)
@@ -155,32 +153,23 @@ io.on('connection', function (socket) {
         }
     });
 
-    function generateNewRandomId() {
-        return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
-    }
-
     // When a user deletes a story
     socket.on('deleteStoryByUser', function (key, room) {
-        console.log("Received request to remove " + key + " from room " + room);
-        console.log(rooms[room].stories)
         delete rooms[room].stories[key];
-        console.log(rooms[room].stories)
-        console.log(rooms[room].activeStory)
+
         if (rooms[room].activeStory === key) {
-            console.log("Trying to delete the active story better pick a new one!")
+            let newActiveItem;
             if (Object.keys(rooms[room].stories).length == 0) {
                 rooms[room].activeStory = undefined;
+                newActiveItem = undefined
                 console.log("Telling connected users there is no selected story")
-                io.to(room).emit('selectStoryAsActive', undefined);
             } else {
-                console.log(rooms[room].stories)
                 let newActiveItem = Object.keys(rooms[room].stories)[0]
                 rooms[room].activeStory = newActiveItem;
-                console.log("New active story after removing " + key + ": " + newActiveItem)
-                io.to(room).emit("selectStoryAsActive", newActiveItem)
             }
+            io.to(room).emit("selectStoryAsActive", newActiveItem)
         }
-        //TODO: Select a new active story
+
         io.to(room).emit('storiesList', rooms[room].stories)
     });
 
@@ -250,6 +239,10 @@ io.on('connection', function (socket) {
             io.to(room).emit('currentUsers', rooms[room].users);
         }
     });
+
+    function generateId() {
+        return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
+    }
 
 });
 
