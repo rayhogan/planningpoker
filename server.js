@@ -99,8 +99,8 @@ io.on('connection', function (socket) {
             connections[socket.id].roomID = socket.id;
             rooms[socket.id] = {
                 users: {},
-                stories: ["As a User, I would like X, so that Y", "As a User, I want Z"],
-                activeStory: 0,
+                stories: {},
+                activeStory: undefined,
                 showResults: false,
                 hiddenScores: {}
             };
@@ -124,29 +124,53 @@ io.on('connection', function (socket) {
     // When a user updates the story details
     socket.on('storyUpdatedByUser', function (storyText, room) {
         // Update active story title and emit to all users in the room
-        rooms[room].stories[rooms[room].activeStory] = storyText;
-        io.to(room).emit('updateStory', storyText);
-        io.to(room).emit('storiesList', rooms[room].stories)
+        if(rooms[room].activeStory !== undefined){
+            rooms[room].stories[rooms[room].activeStory] = storyText;
+            io.to(room).emit('updateStory', storyText);
+            io.to(room).emit('storiesList', rooms[room].stories)
+        }
+    });
+
+    // When a user selects a new active story
+    socket.on('selectStoryByUser', function (room, key) {
+        rooms[room].activeStory = key;
+        io.to(room).emit('selectStoryAsActive', key);
     });
 
     // When a user submits a new story
     socket.on('newStoryByUser', function (newStoryTitle, room) {
         console.log("New story created: " + newStoryTitle);
-        rooms[room].stories.push(newStoryTitle);
+        let id = generateId();
+        rooms[room].stories[id] = newStoryTitle;
+        console.log(rooms[room].activeStory)
 
         //Send to everyone to stay in sync.
         io.to(room).emit('storiesList', rooms[room].stories)
+        if (rooms[room].activeStory === undefined) {
+            console.log("Setting the active story to :" + id)
+            rooms[room].activeStory = id;
+            io.to(room).emit('selectStoryAsActive', id);
+        }
     });
 
     // When a user deletes a story
-    socket.on('deleteStoryByUser', function (story, room) {
-        console.log("Received request to remove " + story + " from room " + room);
+    socket.on('deleteStoryByUser', function (key, room) {
+        delete rooms[room].stories[key];
 
-        let storyIndex = rooms[room].stories.indexOf(story)
-        if (storyIndex > -1) {
-            rooms[room].stories.splice(storyIndex, 1);
-            io.to(room).emit('storiesList', rooms[room].stories)
+        if (rooms[room].activeStory === key) {
+            let newActiveItem;
+            if (Object.keys(rooms[room].stories).length == 0) {
+                rooms[room].activeStory = undefined;
+                newActiveItem = undefined
+                console.log("Telling connected users there is no selected story")
+            } else {
+                let newActiveItem = Object.keys(rooms[room].stories)[0]
+                rooms[room].activeStory = newActiveItem;
+            }
+            io.to(room).emit("selectStoryAsActive", newActiveItem)
         }
+
+        io.to(room).emit('storiesList', rooms[room].stories)
     });
 
     // When a user updates their display name
@@ -215,6 +239,10 @@ io.on('connection', function (socket) {
             io.to(room).emit('currentUsers', rooms[room].users);
         }
     });
+
+    function generateId() {
+        return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
+    }
 
 });
 

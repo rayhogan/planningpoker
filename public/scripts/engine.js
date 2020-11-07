@@ -56,15 +56,30 @@ this.socket.on('showScore', function (score) {
     document.getElementById('scorePanel').innerText = score;
 });
 
+// When we receive a request to change the active session.
+this.socket.on('selectStoryAsActive', function (key) {
+    let activeStoryText = "Add some stories to start a session!"
+    if (key === null) {
+        console.log("No active story");
+    } else {
+        console.log("Received order to change active story to : " + key);
+        let activeStoryInBacklog = document.getElementById("story_" + key);
+        activeStoryText = activeStoryInBacklog.innerText
+    }
+
+    let storyDisplay = document.getElementById("storyDisplay")
+    storyDisplay.innerText = activeStoryText
+})
 
 // Receive the list of stories in the session from the server and add them to our list.
 this.socket.on('storiesList', function (stories) {
     //Replace all items in the lit with what has come from the server.
     //Host should be able to add, remove, reorder, which should be reflected in the client.
     document.getElementById('pendingStories').innerHTML = ''
-    stories.forEach(function (story) {
-        if (story !== undefined) {
-            updateStoriesList(story);
+    Object.keys(stories).forEach(function (key) {
+        if (key !== undefined) {
+            let story = stories[key];
+            updateStoriesList(key, story);
         }
     });
 });
@@ -118,7 +133,7 @@ function addStory() {
 }
 
 // Update our stories list to include the given story.
-function updateStoriesList(newStory) {
+function updateStoriesList(key, newStory) {
     let newStoryDiv = document.createElement("div")
     newStoryDiv.className = "Story"
     let deleteButton = document.createElement("img")
@@ -126,6 +141,7 @@ function updateStoriesList(newStory) {
     deleteButton.setAttribute("class", "StoryDeleteButton")
 
     let text = document.createElement("span")
+    text.setAttribute("id", "story_" + key)
     text.setAttribute("class", "StoryTitleText")
     text.innerText = newStory
 
@@ -136,15 +152,16 @@ function updateStoriesList(newStory) {
 }
 
 function deleteStoryItem(elem) {
-    let storyText;
+    let key;
     for (let i = 0; i < elem.childNodes.length; i++) {
         let node = elem.childNodes[i]
         if (node.className === "StoryTitleText") {
-            storyText = node.innerText;
+            let id = node.getAttribute("id");
+            key = getStoryKeyFromId(id);
         }
     }
-    if (storyText !== undefined) {
-        this.socket.emit('deleteStoryByUser', storyText, roomID);
+    if (key !== undefined) {
+        this.socket.emit('deleteStoryByUser', key, roomID);
     }
 }
 
@@ -163,6 +180,25 @@ document.addEventListener('click', function (e) {
         deleteStoryItem(e.target.parentNode)
     }
 });
+
+document.addEventListener('click', function (e) {
+    if (e.target && e.target.className === 'StoryTitleText') {
+        let id = e.target.getAttribute("id")
+        let storyKey = getStoryKeyFromId(id);
+        selectStory(storyKey, e.target.innerText)
+    }
+});
+
+function selectStory(key, storyText) {
+    if(confirm(storyText + "\nSelect this as active story?")){
+        document.getElementById("storyDisplay").innerText = storyText
+        this.socket.emit('selectStoryByUser', roomID, key)
+    }
+}
+
+function getStoryKeyFromId(id) {
+    return id.substring(6);//Substring after "story_" part of id.
+}
 
 //Create room
 function createRoom() {
@@ -191,15 +227,20 @@ this.socket.on('startSession', function (room, roomDetails, userID) {
 
     // Render pending the stories
     document.getElementById('pendingStories').innerHTML = '';
-    roomDetails.stories.forEach(function (story) {
-        if (story !== undefined) {
-            updateStoriesList(story);
+    Object.keys(roomDetails.stories).forEach(function (key) {
+        if (key !== undefined) {
+            let story = roomDetails.stories[key]
+            console.log(key, story);
+            updateStoriesList(key, story);
         }
     });
 
     // Set the current story
-    document.getElementById('storyDisplay').innerText = roomDetails.stories[roomDetails.activeStory];
-
+    let currentStory = "Add some stories to start your session!"
+    if (roomDetails.activeStory !== undefined) {
+        currentStory = roomDetails.stories[roomDetails.activeStory];
+    }
+    document.getElementById('storyDisplay').innerText = currentStory;
     // Hide joining options and show poker UI
     document.getElementById('joinOptions').style.display = 'none';
     document.getElementById('Poker').style.display = 'block';
