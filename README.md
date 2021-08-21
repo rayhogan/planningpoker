@@ -1,7 +1,7 @@
 # StorySizing.io (In Development)
+Screenshots from v1.0 (See releases)
 ![Alt text](/public/assets/screenshot.png?raw=true "App Screenshot")
 ![Alt text](/public/assets/screenshot_2.png?raw=true "App Screenshot")
-Screenshots from v1.0 (See releases)
 
 Check it out live, here: [https://storysizing.io](https://storysizing.io)
 
