@@ -1,98 +1,43 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
 
-<head>
-    <meta charset="UTF-8" />
-    <title>Planning Poker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
-    <script src="/socket.io/socket.io.js"></script>
-    <link rel="stylesheet" href="styles/poker.css">
-</head>
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
 
-<body>
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
 
-    <h1> Planning Poker </h1>
-
-    <div id="Poker" style="display: none;">
-        <div class="PokerControls">
-            <div class="StoryTitle">
-                <div id="storyDisplay">As a User, I would like X, so that Y</div>
-                <textarea style="display: none;" id="storyTitle" name="storyTitle" rows="4" cols="50"
-                    onblur="editFinished()">As a User, I would like X, so that Y</textarea>
-            </div>
-            <div class="ScoreButtons">
-                <button type="button" onclick="SubmitScore(this)" value="1">1</button>
-                <button type="button" onclick="SubmitScore(this)" value="2">2</button>
-                <button type="button" onclick="SubmitScore(this)" value="3">3</button>
-                <button type="button" onclick="SubmitScore(this)" value="5">5</button>
-                <button type="button" onclick="SubmitScore(this)" value="8">8</button>
-                <button type="button" onclick="SubmitScore(this)" value="13">13</button>
-                <button type="button" onclick="SubmitScore(this)" value="21">21</button>
-                <button type="button" onclick="SubmitScore(this)" value="34">34</button>
-            </div>
-
-            <div class="ControlButtons">
-                <div>
-                    <button type="button" class="ShowResults" onclick="ShowScore();">Show Score</button>
-                </div>
-                <div> <button type="button" class="ClearScores" onclick="ResetScore();">Clear Votes</button>
-                </div>
-
-            </div>
-            <div class="ResultsPanel">
-                <div class="Score">
-                    <div>Team Consensus</div>
-                    <div id="scorePanel">0</div>
-                </div>
-            </div>
-            <div class="TabPanel">
-                <button id="usersButton" type="button" class="selected">Users</button><button id="backlogButton" type="button">Backlog</button>
-            </div>
-            <div id="StoriesPanel" class="StoriesPanel" style="display: none;">
-                <div class="NewStory">
-                    <input style="display:block" id="newStoryTitle" name="newStoryTitle" placeholder="Add a new story">
-                </div>
-                <div id="pendingStories">
-                </div>
-            </div>
-            <div id="UsersPanel" class="UsersPanel">
-                <div id="UserList">
-                </div>
-            </div>
-            <div class="RoomIDPanel">
-                <span>Room ID </span>
-                <input type="text" id="roomID">
-            </div>
-        </div>
-    </div>
-    <div id="joinOptions">
-        <div class="CreateSession Option">
-            <span>Create Session</span>
-            <div>
-                <input type="text" id="createRoomName" placeholder="John Smith">
-            </div>
-            <button type="button" class="ChangeName" onclick="createRoom()">Create</button>
-        </div>
-        <div>
-            OR
-        </div>
-        <div class="JoinSession Option">
-            <span>Join Session</span>
-            <div>
-                <input type="text" id="joinRoomName" placeholder="John Smith"><br/>
-                <input type="text" id="joinRoomID" placeholder="Room ID">
-            </div>
-            <button type="button" class="ChangeName" onclick="joinRoom()">Join</button>
-        </div>
-    </div>
-    <div class="Social-Buttons">
-        <div>
-            <a href="https://github.com/rayhogan/planningpoker" target="_blank">
-                <img src="assets/github.svg" />
-            </a>
-        </div>
-    </div>
-    <script src="scripts/engine.js"></script>
-</body>
-
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
 </html>
