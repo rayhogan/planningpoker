@@ -1,5 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+
 .App {
   text-align: center;
+  background-color: #6fbeec;
+  min-height: 100vh;
 }
 
 .App-logo {
@@ -14,14 +20,14 @@
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: calc(30px + 2vmin);
+  color: #f1f199;
+  font-family: 'Luckiest Guy', cursive;
 }
 
 .App-link {
