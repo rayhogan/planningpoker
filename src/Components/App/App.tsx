@@ -2,6 +2,7 @@ import logo from './Assets/logo.svg';
 import './App.css';
 import Login from '../Login/Login';
 import ActiveStory from '../ActiveStory/ActiveStory';
+import VotingControls from '../VotingControls/VotingControls';
 
 function App() {
   return (
@@ -12,10 +13,13 @@ function App() {
         </p>
       </header>
       <div>
-        <Login />
+        {/* <Login /> */}
       </div>
       <div>
-        <ActiveStory title="As a User, I want X, or that Y" />
+        <ActiveStory title="As a User, I want X, so that Y" />
+      </div>
+      <div>
+         <VotingControls/>
       </div>
     </div>
   );
