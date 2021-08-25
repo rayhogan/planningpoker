@@ -1,0 +1,22 @@
+.Voting-controls {
+padding-top: 10px;
+}
+
+.Paper-card {
+    width: 40px;
+    height: 50px;
+}
+
+.Paper-card div {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.Paper-card:hover {
+    cursor: pointer;
+    background-color: black;
+    color: white;
+}

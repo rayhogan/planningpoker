@@ -1,4 +1,3 @@
-import { StoreMallDirectory } from '@material-ui/icons';
 import { Story } from '../../Models/IStory';
 import React from 'react';
 import './ActiveStory.css';
