@@ -1,4 +1,3 @@
-import logo from './Assets/logo.svg';
 import './App.css';
 import Login from './Login/Login';
 import ActiveStory from './ActiveStory/ActiveStory';
