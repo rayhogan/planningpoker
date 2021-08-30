@@ -2,6 +2,7 @@ import './App.css';
 import Login from './Login/Login';
 import ActiveStory from './ActiveStory/ActiveStory';
 import VotingControls from './VotingControls/VotingControls';
+import AdminControls from './AdminControls/AdminControls';
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
       </div>
       <div>
          <VotingControls/>
+      </div>
+      <div>
+        <AdminControls/>
       </div>
     </div>
   );
