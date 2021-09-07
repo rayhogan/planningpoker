@@ -1,0 +1,39 @@
+.Connected-users {
+    background-color: white;
+    padding: 10px;
+}
+
+.Connected-users .small {
+    height: 35px;
+    width: 35px;
+}
+
+.Paper {
+    border-radius: 10px;
+    border-color: white;
+    border-width: 3px;
+    border-style: solid;
+    color: white;
+    padding: 10px;
+}
+
+.Paper>div {
+    padding-bottom: 5px;
+}
+
+.Users-container {
+    display: flex;
+}
+
+.Users-container .Left{
+    margin-right: 10px;
+}
+
+.Left{
+    flex: 20;
+}
+.Right {
+    flex: 80;
+    text-align: left;
+    padding-top: 9px;
+} 
