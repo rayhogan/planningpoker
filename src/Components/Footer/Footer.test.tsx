@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import Login from './Login';
+import Footer from './Footer';
 
-test('verifies login screen layout', () => {
-  render(<Login/>);
-  const linkElement = screen.getByText(/Create Session/);
+test('verifies footer screen', () => {
+  render(<Footer/>);
+  const linkElement = screen.getByAltText("githublogo");
   expect(linkElement).toBeInTheDocument();
 });

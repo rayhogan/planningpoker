@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="Footer-Panel">
       <a href="https://github.com/rayhogan/planningpoker" target="_blank">
-        <img src={github} />
+        <img src={github} alt="githublogo"/>
       </a>
     </div >
   );
