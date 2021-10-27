@@ -11,16 +11,16 @@ import React from 'react';
 
 class StoryBacklog extends React.Component {
 
-   createData(name:string, score:number) {
-    return { name, score };
+   createData(id: number, name:string, score:number) {
+    return { id, name, score };
   }
   
    rows = [
-    this.createData('As a User, I want X, so that Y', 0),
-    this.createData('As a User, I want X, so that Y', 0),
-    this.createData('As a User, I want X, so that Y', 0),
-    this.createData('As a User, I want X, so that Y', 0),
-    this.createData('As a User, I want X, so that Y', 0),
+    this.createData(0, 'As a User, I want X, so that Y', 0),
+    this.createData(1, 'As a User, I want X, so that Y', 0),
+    this.createData(2, 'As a User, I want X, so that Y', 0),
+    this.createData(3, 'As a User, I want X, so that Y', 0),
+    this.createData(4, 'As a User, I want X, so that Y', 0),
   ];
 
   render() {
@@ -37,7 +37,7 @@ class StoryBacklog extends React.Component {
               </TableHead>
               <TableBody>
                 {this.rows.map((row) => (
-                  <TableRow>
+                  <TableRow key={row.id}>
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>

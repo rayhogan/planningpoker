@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import Login from './Login';
+import StoryBacklog from './StoryBacklog';
 
-test('verifies login screen layout', () => {
-  render(<Login/>);
-  const linkElement = screen.getByText(/Create Session/);
+test('verifies story table', () => {
+  render(<StoryBacklog/>);
+  const linkElement = screen.getByText(/Story/);
   expect(linkElement).toBeInTheDocument();
 });
