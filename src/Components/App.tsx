@@ -7,6 +7,10 @@ import ActiveStory from './ActiveStory/ActiveStory';
 import VotingControls from './VotingControls/VotingControls';
 import AdminControls from './AdminControls/AdminControls';
 import ConnectedUsers from './ConnectedUsers/ConnectedUsers';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Box from '@material-ui/core/Box';
+import Footer from './Footer/Footer';
 
 
 function App() {
@@ -27,7 +31,7 @@ function App() {
         <VotingControls />
       </div>
       <div>
-        {/* <AdminControls /> */}
+        <AdminControls />
       </div>
       <div className="Info-Area">
         <div className="Info-Panel">
@@ -36,10 +40,13 @@ function App() {
               <ConnectedUsers />
             </Grid>
             <Grid item xs={9}>
-              <StoryBacklog/>
+              <StoryBacklog />
             </Grid>
           </Grid>
         </div>
+      </div>
+      <div className="Footer">
+        <Footer/>
       </div>
     </div>
   );
